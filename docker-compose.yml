@@ -1,0 +1,44 @@
+version: "3.8"
+#
+services:
+  feedback-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: feedback-api:latest
+    container_name: feedback-api
+    ports:
+      - "8080:8080"
+    volumes:
+      # H2 Database persistence (Docker volume)
+      - feedback-data:/app/data
+      # Log files persistence (Docker volume)
+      - feedback-logs:/app/logs
+    environment:
+      # Spring profiles
+      - SPRING_PROFILES_ACTIVE=prod
+      # JVM options
+      - JAVA_OPTS=-Xmx512m -Xms256m
+      # Database path (application.yml에 있음, override 가능)
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/feedbackdb;DB_CLOSE_EXIT=FALSE;AUTO_RECONNECT=TRUE
+      # Logging
+      - LOGGING_FILE_NAME=/app/logs/feedback-api.log
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - feedback-network
+
+volumes:
+  feedback-data:
+    name: feedback-data
+  feedback-logs:
+    name: feedback-logs
+
+networks:
+  feedback-network:
+    driver: bridge
