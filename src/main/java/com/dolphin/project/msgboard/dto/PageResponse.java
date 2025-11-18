@@ -1,6 +1,5 @@
 package com.dolphin.project.msgboard.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import java.util.List;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class PageResponse<T> {
 
     private List<T> content;

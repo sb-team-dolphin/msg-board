@@ -31,16 +31,14 @@ public class Feedback {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        // XSS 방지: 저장 전 HTML escape 처리
-        this.username = XssUtil.clean(this.username);
-        this.message = XssUtil.clean(this.message);
     }
 
     @Builder
     private Feedback(Long id, String username, String message, LocalDateTime createdAt) {
         this.id = id;
-        this.username = username;
-        this.message = message;
+        // XSS 방지: 생성 시점에 HTML escape 처리
+        this.username = XssUtil.clean(username);
+        this.message = XssUtil.clean(message);
         this.createdAt = createdAt;
     }
 }

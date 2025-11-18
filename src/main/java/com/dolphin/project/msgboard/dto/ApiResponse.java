@@ -1,12 +1,10 @@
 package com.dolphin.project.msgboard.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class ApiResponse<T> {
 
     private boolean success;
